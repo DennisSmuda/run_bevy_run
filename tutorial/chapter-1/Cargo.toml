@@ -1,0 +1,9 @@
+[package]
+name = "chapter-1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.6.1"
+rand = "0.8"
+bevy-inspector-egui = "0.9"
