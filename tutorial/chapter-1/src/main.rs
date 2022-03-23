@@ -3,12 +3,14 @@ use bevy::prelude::*;
 mod constants;
 use constants::*;
 
-#[derive(Debug, Clone, Eq, PartialEq, Hash)]
-pub enum AppState {
-  Menu,
-  InGame,
-  GameOver,
-}
+///
+/// State Plugins
+mod main_menu;
+use main_menu::MainMenuPlugin;
+mod game;
+use game::GamePlugin;
+// mod game_over;
+// use game_over::GameOverPlugin;
 
 fn main() {
   let mut app = App::new();
@@ -22,7 +24,11 @@ fn main() {
       ..Default::default()
     })
     // Bevy default plugins
-    .add_plugins(DefaultPlugins);
+    .add_plugins(DefaultPlugins)
+    // States
+    .add_plugin(MainMenuPlugin)
+    .add_plugin(GamePlugin)
+    .add_state(AppState::Menu);
 
   // Startup system (cameras)
   app.add_startup_system(camera_setup);
@@ -35,4 +41,10 @@ fn camera_setup(mut commands: Commands) {
   commands.spawn_bundle(OrthographicCameraBundle::new_2d());
   // UI Camera
   commands.spawn_bundle(UiCameraBundle::default());
+}
+
+pub fn teardown_state(mut commands: Commands, entities: Query<Entity, Without<Camera>>) {
+  for entity in entities.iter() {
+    commands.entity(entity).despawn_recursive();
+  }
 }
