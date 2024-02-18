@@ -1,5 +1,7 @@
 use crate::*;
 
+mod game_ui;
+
 #[derive(Component)]
 struct Player;
 
@@ -14,11 +16,14 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(AppState::InGame), setup_game)
+            .add_systems(OnEnter(AppState::InGame), game_ui::setup)
+            .add_systems(Update, game_ui::update.run_if(in_state(AppState::InGame)))
             .add_systems(Update, spawn_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, move_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, player_movement.run_if(in_state(AppState::InGame)))
             .add_systems(Update, check_collisions.run_if(in_state(AppState::InGame)))
-            .add_systems(OnExit(AppState::InGame), teardown_game_state);
+            .add_systems(OnExit(AppState::InGame), teardown_game_state)
+            .add_systems(OnExit(AppState::InGame), game_ui::teardown);
     }
 }
 

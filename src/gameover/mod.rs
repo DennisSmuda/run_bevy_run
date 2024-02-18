@@ -81,6 +81,12 @@ fn update_gameover(
     }
 }
 
-fn teardown_gameover_state(mut commands: Commands, menu_data: Res<MenuData>) {
+fn teardown_gameover_state(
+    mut commands: Commands,
+    menu_data: Res<MenuData>,
+    mut game_state: ResMut<GameState>,
+) {
     commands.entity(menu_data.button_entity).despawn_recursive();
+    // Reset Score!
+    game_state.score = 0;
 }
