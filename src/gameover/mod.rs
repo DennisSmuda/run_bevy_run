@@ -1,5 +1,10 @@
 use crate::*;
 
+#[derive(Resource)]
+struct MenuData {
+    button_entity: Entity,
+}
+
 pub struct GameOverPlugin;
 
 impl Plugin for GameOverPlugin {

@@ -1,5 +1,14 @@
 use crate::*;
 
+#[derive(Component)]
+struct Player;
+
+#[derive(Component)]
+struct Enemy;
+
+#[derive(Component)]
+struct Velocity(Vec3);
+
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
@@ -57,23 +66,19 @@ fn move_enemies(time: Res<Time>, mut query: Query<(&Velocity, &mut Transform), W
 
 fn check_collisions(
     mut next_state: ResMut<NextState<AppState>>,
-    mut commands: Commands,
     player_query: Query<&Transform, With<Player>>,
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,
 ) {
     let player_transform = player_query.single(); // Assumes there's exactly one player
 
-    for (enemy_entity, enemy_transform) in enemy_query.iter() {
+    for (_enemy_entity, enemy_transform) in enemy_query.iter() {
         if player_transform
             .translation
             .distance(enemy_transform.translation)
             < 30.0
         {
             // Collision detected, handle game over condition
-            println!("Game Over!");
-            // state.set(AppState::GameOver).unwrap();
             next_state.set(AppState::GameOver);
-            // Here you might want to despawn the player, reset the game, or implement other game over logic
         }
     }
 }
@@ -107,9 +112,7 @@ fn teardown_game_state(
     entities: Query<Entity, With<Enemy>>,
     players: Query<Entity, With<Player>>,
 ) {
-    println!("Tearing down state");
     for entity in entities.iter() {
-        println!("Despawning entity: {:?}", entity);
         commands.entity(entity).despawn_recursive();
     }
     for player in players.iter() {
