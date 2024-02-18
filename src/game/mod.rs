@@ -14,13 +14,11 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(player::PlayerPlugin)
-            .add_systems(OnEnter(AppState::InGame), game_ui::setup)
-            .add_systems(Update, game_ui::update.run_if(in_state(AppState::InGame)))
+            .add_plugins(game_ui::GameUiPlugin)
             .add_systems(Update, spawn_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, move_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, check_collisions.run_if(in_state(AppState::InGame)))
-            .add_systems(OnExit(AppState::InGame), teardown)
-            .add_systems(OnExit(AppState::InGame), game_ui::teardown);
+            .add_systems(OnExit(AppState::InGame), teardown);
     }
 }
 

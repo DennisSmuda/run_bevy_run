@@ -9,13 +9,13 @@ pub struct GameOverPlugin;
 
 impl Plugin for GameOverPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::GameOver), setup_gameover)
+        app.add_systems(OnEnter(AppState::GameOver), setup)
             .add_systems(Update, update_gameover.run_if(in_state(AppState::GameOver)))
             .add_systems(OnExit(AppState::GameOver), teardown);
     }
 }
 
-fn setup_gameover(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let menu_node = commands
         .spawn(NodeBundle {
             style: Style {
@@ -47,9 +47,11 @@ fn setup_gameover(mut commands: Commands, asset_server: Res<AssetServer>) {
                     style: Style {
                         width: Val::Px(150.),
                         height: Val::Px(65.),
-                        // horizontally center child text
+                        padding: UiRect {
+                            bottom: Val::Px(8.),
+                            ..default()
+                        },
                         justify_content: JustifyContent::Center,
-                        // vertically center child text
                         align_items: AlignItems::Center,
                         ..default()
                     },
@@ -60,6 +62,7 @@ fn setup_gameover(mut commands: Commands, asset_server: Res<AssetServer>) {
                     parent.spawn(TextBundle::from_section(
                         "Play",
                         TextStyle {
+                            font: asset_server.load("fonts/Efforts.ttf"),
                             font_size: 40.0,
                             color: Color::rgb(0.9, 0.9, 0.9),
                             ..default()

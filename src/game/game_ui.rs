@@ -1,5 +1,15 @@
 use crate::*;
 
+pub struct GameUiPlugin;
+
+impl Plugin for GameUiPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(OnEnter(AppState::InGame), setup)
+            .add_systems(Update, update.run_if(in_state(AppState::InGame)))
+            .add_systems(OnExit(AppState::InGame), teardown);
+    }
+}
+
 #[derive(Resource)]
 pub struct GameUiData {
     text_entity: Entity,
