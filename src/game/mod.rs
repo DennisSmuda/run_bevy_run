@@ -22,7 +22,7 @@ impl Plugin for GamePlugin {
             .add_systems(Update, move_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, player_movement.run_if(in_state(AppState::InGame)))
             .add_systems(Update, check_collisions.run_if(in_state(AppState::InGame)))
-            .add_systems(OnExit(AppState::InGame), teardown_game_state)
+            .add_systems(OnExit(AppState::InGame), teardown)
             .add_systems(OnExit(AppState::InGame), game_ui::teardown);
     }
 }
@@ -112,7 +112,7 @@ fn player_movement(
     }
 }
 
-fn teardown_game_state(
+fn teardown(
     mut commands: Commands,
     entities: Query<Entity, With<Enemy>>,
     players: Query<Entity, With<Player>>,

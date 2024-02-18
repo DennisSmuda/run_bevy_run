@@ -1,24 +1,31 @@
 use crate::*;
 
+#[derive(Resource)]
+pub struct GameUiData {
+    text_entity: Entity,
+}
 ///
 /// Spawn UI Bundle
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // Score Text
-    commands.spawn(TextBundle {
-        style: Style {
-            position_type: PositionType::Absolute,
-            ..default()
-        },
-        text: Text::from_section(
-            format!("score: {} ", 0.),
-            TextStyle {
-                font: asset_server.load("fonts/Efforts.ttf"),
-                font_size: 32.0,
-                color: Color::WHITE,
+    let text_entity = commands
+        .spawn(TextBundle {
+            style: Style {
+                position_type: PositionType::Absolute,
+                ..default()
             },
-        ),
-        ..Default::default()
-    });
+            text: Text::from_section(
+                format!("score: {} ", 0.),
+                TextStyle {
+                    font: asset_server.load("fonts/Efforts.ttf"),
+                    font_size: 32.0,
+                    color: Color::WHITE,
+                },
+            ),
+            ..Default::default()
+        })
+        .id();
+    commands.insert_resource(GameUiData { text_entity });
 }
 
 ///
@@ -37,8 +44,8 @@ pub fn update(
     }
 }
 
-pub fn teardown(mut commands: Commands, entities: Query<Entity, Without<Camera>>) {
-    for entity in entities.iter() {
-        commands.entity(entity).despawn_recursive();
-    }
+pub fn teardown(mut commands: Commands, game_ui_data: Res<GameUiData>) {
+    commands
+        .entity(game_ui_data.text_entity)
+        .despawn_recursive();
 }

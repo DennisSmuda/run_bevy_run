@@ -11,7 +11,7 @@ impl Plugin for GameOverPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(AppState::GameOver), setup_gameover)
             .add_systems(Update, update_gameover.run_if(in_state(AppState::GameOver)))
-            .add_systems(OnExit(AppState::GameOver), teardown_gameover_state);
+            .add_systems(OnExit(AppState::GameOver), teardown);
     }
 }
 
@@ -81,11 +81,7 @@ fn update_gameover(
     }
 }
 
-fn teardown_gameover_state(
-    mut commands: Commands,
-    menu_data: Res<MenuData>,
-    mut game_state: ResMut<GameState>,
-) {
+fn teardown(mut commands: Commands, menu_data: Res<MenuData>, mut game_state: ResMut<GameState>) {
     commands.entity(menu_data.button_entity).despawn_recursive();
     // Reset Score!
     game_state.score = 0;
