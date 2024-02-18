@@ -1,5 +1,5 @@
 [package]
-name = "bevy_game_gpt"
+name = "run_bevy_tutorial"
 version = "0.1.0"
 edition = "2021"
 
