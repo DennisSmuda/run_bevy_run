@@ -2,7 +2,7 @@ use crate::*;
 
 #[derive(Resource)]
 struct MenuData {
-    button_entity: Entity,
+    menu_node: Entity,
 }
 
 pub struct GameOverPlugin;
@@ -15,13 +15,14 @@ impl Plugin for GameOverPlugin {
     }
 }
 
-fn setup_gameover(mut commands: Commands) {
-    let button_entity = commands
+fn setup_gameover(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let menu_node = commands
         .spawn(NodeBundle {
             style: Style {
                 // center button
                 width: Val::Percent(100.),
                 height: Val::Percent(100.),
+                flex_direction: FlexDirection::Column,
                 justify_content: JustifyContent::Center,
                 align_items: AlignItems::Center,
                 ..default()
@@ -29,6 +30,18 @@ fn setup_gameover(mut commands: Commands) {
             ..default()
         })
         .with_children(|parent| {
+            parent.spawn(TextBundle {
+                text: Text::from_section(
+                    "Game Over",
+                    TextStyle {
+                        font: asset_server.load("fonts/Efforts.ttf"),
+                        font_size: 60.0,
+                        color: Color::WHITE,
+                        ..default()
+                    },
+                ),
+                ..default()
+            });
             parent
                 .spawn(ButtonBundle {
                     style: Style {
@@ -55,7 +68,7 @@ fn setup_gameover(mut commands: Commands) {
                 });
         })
         .id();
-    commands.insert_resource(MenuData { button_entity });
+    commands.insert_resource(MenuData { menu_node });
 }
 
 fn update_gameover(
@@ -82,7 +95,7 @@ fn update_gameover(
 }
 
 fn teardown(mut commands: Commands, menu_data: Res<MenuData>, mut game_state: ResMut<GameState>) {
-    commands.entity(menu_data.button_entity).despawn_recursive();
+    commands.entity(menu_data.menu_node).despawn_recursive();
     // Reset Score!
     game_state.score = 0;
 }

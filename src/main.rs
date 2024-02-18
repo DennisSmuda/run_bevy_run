@@ -52,5 +52,10 @@ fn main() {
         }))
         .add_plugins(GameOverPlugin)
         .add_plugins(GamePlugin)
+        .add_systems(Startup, setup_camera)
         .run();
+}
+
+fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
 }

@@ -12,6 +12,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .spawn(TextBundle {
             style: Style {
                 position_type: PositionType::Absolute,
+                left: Val::Px(10.),
                 ..default()
             },
             text: Text::from_section(

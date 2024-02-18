@@ -28,7 +28,6 @@ impl Plugin for GamePlugin {
 }
 
 fn setup_game(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
     commands
         .spawn(SpriteBundle {
             sprite: Sprite {
