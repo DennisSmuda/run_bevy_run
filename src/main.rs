@@ -4,19 +4,20 @@ use bevy::window::WindowResolution;
 mod constants;
 use constants::*;
 
-mod gameover;
-use gameover::GameOverPlugin;
+mod components;
+use components::*;
 
 mod game;
 use game::GamePlugin;
+
+mod gameover;
+use gameover::GameOverPlugin;
 
 #[derive(Resource)]
 struct SpawnTimer(Timer);
 
 #[derive(Resource)]
 struct ScoreTimer(Timer);
-
-const TIME_STEP: f32 = 5.0;
 
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum AppState {
