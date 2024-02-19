@@ -26,7 +26,7 @@ pub enum Collider {
 }
 
 // MoveDirection Component
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 pub enum MoveDirection {
     Left,
     Up,

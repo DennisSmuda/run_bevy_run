@@ -37,7 +37,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                         font: asset_server.load("fonts/Efforts.ttf"),
                         font_size: 60.0,
                         color: Color::WHITE,
-                        ..default()
                     },
                 ),
                 ..default()
@@ -65,7 +64,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                             font: asset_server.load("fonts/Efforts.ttf"),
                             font_size: 40.0,
                             color: Color::rgb(0.9, 0.9, 0.9),
-                            ..default()
                         },
                     ));
                 });
@@ -74,6 +72,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(MenuData { menu_node });
 }
 
+#[allow(clippy::type_complexity)]
 fn update_gameover(
     mut next_state: ResMut<NextState<AppState>>,
     mut interaction_query: Query<

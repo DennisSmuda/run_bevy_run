@@ -110,4 +110,5 @@ fn setup_player_correctly() {
     let mut query = app.world.query::<&Player>();
     let player = query.iter(&app.world).next().unwrap();
     assert_eq!(player.speed, 250.0);
+    assert_eq!(player.direction, MoveDirection::Up);
 }
