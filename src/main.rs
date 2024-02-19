@@ -1,9 +1,6 @@
 use bevy::window::WindowResolution;
 use bevy::{
-    core_pipeline::{
-        bloom::{BloomCompositeMode, BloomSettings},
-        tonemapping::Tonemapping,
-    },
+    core_pipeline::{bloom::BloomSettings, tonemapping::Tonemapping},
     prelude::*,
 };
 
