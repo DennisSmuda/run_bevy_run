@@ -51,7 +51,6 @@ pub fn update(
         game_state.score += 10;
         let mut text = text_query.single_mut();
         text.sections[0].value = format!("score: {}", game_state.score);
-        println!("Score: {}", game_state.score);
     }
 }
 
