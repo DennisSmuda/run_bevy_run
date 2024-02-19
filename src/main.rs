@@ -1,71 +1,62 @@
-use bevy::{prelude::*, sprite::collide_aabb::collide};
-// use bevy_inspector_egui::WorldInspectorPlugin;
+use bevy::prelude::*;
+use bevy::window::WindowResolution;
 
-///
-/// Components and Constants
 mod constants;
 use constants::*;
-mod components;
-pub use components::Direction;
-pub use components::*;
 
-///
-/// State Plugins
-mod main_menu;
-use main_menu::MainMenuPlugin;
+mod components;
+use components::*;
+
 mod game;
 use game::GamePlugin;
-mod game_over;
-use game_over::GameOverPlugin;
 
-pub struct ScoreTimer(Timer);
-pub struct SpawnTimer(Timer);
+mod gameover;
+use gameover::GameOverPlugin;
 
-///
-/// App Entry
-/// -> Setup window, plugins, resources
+#[derive(Resource)]
+struct SpawnTimer(Timer);
+
+#[derive(Resource)]
+struct ScoreTimer(Timer);
+
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum AppState {
+    #[default]
+    // Menu,
+    InGame,
+    GameOver,
+}
+
+// Game State => resource to hold score information
+#[derive(Resource)]
+pub struct GameState {
+    pub score: u64,
+}
+
 fn main() {
-  let mut app = App::new();
-  app
-    .insert_resource(ClearColor(BG_COLOR))
-    .insert_resource(WindowDescriptor {
-      title: "Run in Rust".to_string(),
-      width: 720.,
-      height: 420.,
-      ..Default::default()
-    })
-    // Resources
-    .insert_resource(GameState { score: 0 })
-    // Plugins
-    .add_plugins(DefaultPlugins)
-    // .add_plugin(WorldInspectorPlugin::new())
-    // States
-    .add_plugin(MainMenuPlugin)
-    .add_plugin(GamePlugin)
-    .add_plugin(GameOverPlugin)
-    // Start in MenuState
-    .add_state(AppState::Menu);
-
-  // Startup system (cameras)
-  app.add_startup_system(camera_setup);
-  // Run the app
-  app.run();
+    App::new()
+        // Resources
+        .insert_resource(ClearColor(BG_COLOR))
+        .insert_resource(SpawnTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
+        .insert_resource(ScoreTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
+        .insert_resource(GameState { score: 0 })
+        // State
+        .add_state::<AppState>()
+        // Plugins
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Run Bevy".to_string(),
+                resolution: WindowResolution::new(WINDOW_WIDTH, WINDOW_HEIGHT),
+                ..default()
+            }),
+            ..default()
+        }))
+        .add_plugins(GameOverPlugin)
+        .add_plugins(GamePlugin)
+        .add_systems(Startup, setup_camera)
+        .run();
 }
 
-///
-/// Spawn Cameras
-fn camera_setup(mut commands: Commands) {
-  // 2D orthographic camera
-  commands.spawn_bundle(OrthographicCameraBundle::new_2d());
-  // UI Camera
-  commands.spawn_bundle(UiCameraBundle::default());
-}
-
-///
-/// Teardown State
-/// gets called `on_exit` and deletes all entities but cameras
-fn teardown_state(mut commands: Commands, entities: Query<Entity, Without<Camera>>) {
-  for entity in entities.iter() {
-    commands.entity(entity).despawn_recursive();
-  }
+fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
 }
