@@ -100,3 +100,14 @@ fn teardown(mut commands: Commands, players: Query<Entity, With<Player>>) {
         commands.entity(player).despawn_recursive();
     }
 }
+
+#[test]
+fn setup_player_correctly() {
+    let mut app = App::new();
+    app.add_systems(Update, setup_player);
+    app.update();
+
+    let mut query = app.world.query::<&Player>();
+    let player = query.iter(&app.world).next().unwrap();
+    assert_eq!(player.speed, 250.0);
+}
