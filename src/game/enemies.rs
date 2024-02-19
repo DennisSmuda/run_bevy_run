@@ -17,9 +17,6 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
     if timer.0.tick(time.delta()).just_finished() {
         let mut rng = rand::thread_rng();
 
-        // Determine spawn position and velocity here
-        // For example, spawn on the left edge, moving right:
-        let velocity = Vec3::new(10.0, 0.0, 0.0); // Adjust speed and direction as needed
         let direction: MoveDirection = rand::random();
         let speed: f32 = rng.gen_range(32.0..264.0);
         let mut x: f32 = rng.gen();

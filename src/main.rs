@@ -1,5 +1,11 @@
-use bevy::prelude::*;
 use bevy::window::WindowResolution;
+use bevy::{
+    core_pipeline::{
+        bloom::{BloomCompositeMode, BloomSettings},
+        tonemapping::Tonemapping,
+    },
+    prelude::*,
+};
 
 mod constants;
 use constants::*;
@@ -22,7 +28,6 @@ struct ScoreTimer(Timer);
 #[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
 pub enum AppState {
     #[default]
-    // Menu,
     InGame,
     GameOver,
 }
@@ -37,7 +42,7 @@ fn main() {
     App::new()
         // Resources
         .insert_resource(ClearColor(BG_COLOR))
-        .insert_resource(SpawnTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
+        .insert_resource(SpawnTimer(Timer::from_seconds(0.5, TimerMode::Repeating)))
         .insert_resource(ScoreTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
         .insert_resource(GameState { score: 0 })
         // State
@@ -58,5 +63,15 @@ fn main() {
 }
 
 fn setup_camera(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn((
+        Camera2dBundle {
+            camera: Camera {
+                hdr: true,
+                ..default()
+            },
+            tonemapping: Tonemapping::TonyMcMapface,
+            ..default()
+        },
+        BloomSettings::default(),
+    ));
 }
