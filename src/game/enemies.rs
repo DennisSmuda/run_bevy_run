@@ -52,10 +52,7 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
                 transform: Transform::from_translation(spawn_position),
                 ..default()
             })
-            .insert(Enemy {
-                speed: speed,
-                direction: direction,
-            })
+            .insert(Enemy { speed, direction })
             .insert(Collider::Enemy);
     }
 }
