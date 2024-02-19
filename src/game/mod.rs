@@ -34,10 +34,10 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
                 sprite: Sprite {
                     color: ENEMY_COLOR,
                     custom_size: Some(Vec2::new(32.0, 32.0)),
-                    ..Default::default()
+                    ..default()
                 },
                 transform: Transform::from_translation(spawn_position),
-                ..Default::default()
+                ..default()
             })
             .insert(Enemy)
             .insert(Velocity(velocity));

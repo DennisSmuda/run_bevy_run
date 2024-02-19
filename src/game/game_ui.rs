@@ -33,7 +33,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                     color: Color::WHITE,
                 },
             ),
-            ..Default::default()
+            ..default()
         })
         .id();
     commands.insert_resource(GameUiData { text_entity });

@@ -20,9 +20,9 @@ fn setup_player(mut commands: Commands) {
             sprite: Sprite {
                 color: PLAYER_COLOR,
                 custom_size: Some(Vec2::new(16.0, 16.0)),
-                ..Default::default()
+                ..default()
             },
-            ..Default::default()
+            ..default()
         })
         .insert(Player {
             speed: 250.0,
