@@ -70,18 +70,24 @@ fn player_movement(mut players: Query<(&Player, &mut Transform)>) {
 ///
 pub fn player_input(
     mut next_state: ResMut<NextState<AppState>>,
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
     mut players: Query<&mut Player>,
 ) {
     if let Some(mut player) = players.iter_mut().next() {
         let dir: MoveDirection =
-            if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::K) {
+            if keyboard_input.pressed(KeyCode::ArrowUp) || keyboard_input.pressed(KeyCode::KeyK) {
                 MoveDirection::Up
-            } else if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::J) {
+            } else if keyboard_input.pressed(KeyCode::ArrowDown)
+                || keyboard_input.pressed(KeyCode::KeyJ)
+            {
                 MoveDirection::Down
-            } else if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::H) {
+            } else if keyboard_input.pressed(KeyCode::ArrowLeft)
+                || keyboard_input.pressed(KeyCode::KeyH)
+            {
                 MoveDirection::Left
-            } else if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::L) {
+            } else if keyboard_input.pressed(KeyCode::ArrowRight)
+                || keyboard_input.pressed(KeyCode::KeyL)
+            {
                 MoveDirection::Right
             } else {
                 MoveDirection::None
