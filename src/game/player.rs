@@ -114,7 +114,10 @@ fn teardown(mut commands: Commands, players: Query<Entity, With<Player>>) {
 #[test]
 fn setup_player_correctly() {
     let mut app = App::new();
-    app.add_systems(Update, setup_player);
+    app.init_resource::<Assets<Mesh>>();
+    app.init_resource::<Assets<ColorMaterial>>();
+
+    app.add_systems(Update, (setup_player).chain());
     app.update();
 
     let mut query = app.world.query::<&Player>();
