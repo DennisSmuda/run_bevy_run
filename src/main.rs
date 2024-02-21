@@ -43,7 +43,7 @@ fn main() {
         .insert_resource(ScoreTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
         .insert_resource(GameState { score: 0 })
         // State
-        .add_state::<AppState>()
+        .init_state::<AppState>()
         // Plugins
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
