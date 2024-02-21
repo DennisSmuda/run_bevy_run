@@ -117,7 +117,7 @@ fn setup_player_correctly() {
     app.init_resource::<Assets<Mesh>>();
     app.init_resource::<Assets<ColorMaterial>>();
 
-    app.add_systems(Update, (setup_player).chain());
+    app.add_systems(Update, setup_player);
     app.update();
 
     let mut query = app.world.query::<&Player>();
