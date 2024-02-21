@@ -1,4 +1,5 @@
 use crate::*;
+use bevy::sprite::{MaterialMesh2dBundle, Mesh2dHandle};
 
 pub struct PlayerPlugin;
 
@@ -14,14 +15,17 @@ impl Plugin for PlayerPlugin {
 ///
 /// Player Setup
 ///
-fn setup_player(mut commands: Commands) {
+fn setup_player(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+) {
+    let shape = Mesh2dHandle(meshes.add(Circle { radius: 12.0 }));
     commands
-        .spawn(SpriteBundle {
-            sprite: Sprite {
-                color: PLAYER_COLOR,
-                custom_size: Some(Vec2::new(16.0, 16.0)),
-                ..default()
-            },
+        .spawn(MaterialMesh2dBundle {
+            mesh: shape,
+            material: materials.add(PLAYER_COLOR),
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
             ..default()
         })
         .insert(Player {
