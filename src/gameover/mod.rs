@@ -39,6 +39,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                         color: Color::WHITE,
                     },
                 ),
+                style: Style {
+                    margin: UiRect {
+                        bottom: Val::Px(20.),
+                        ..default()
+                    },
+                    ..default()
+                },
                 ..default()
             });
             parent
@@ -99,5 +106,6 @@ fn update_gameover(
 fn teardown(mut commands: Commands, menu_data: Res<MenuData>, mut game_state: ResMut<GameState>) {
     commands.entity(menu_data.menu_node).despawn_recursive();
     // Reset Score!
+    game_state.enemies_killed = 0;
     game_state.score = 0;
 }

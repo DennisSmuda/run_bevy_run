@@ -57,7 +57,11 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
     }
 }
 
-pub fn move_enemies(mut commands: Commands, mut enemies: Query<(Entity, &Enemy, &mut Transform)>) {
+pub fn move_enemies(
+    mut commands: Commands,
+    mut enemies: Query<(Entity, &Enemy, &mut Transform)>,
+    mut event_writer: EventWriter<EnemyKilledEvent>,
+) {
     for (enemy_entity, enemy, mut transform) in enemies.iter_mut() {
         let translation = &mut transform.translation;
         match &enemy.direction {
@@ -65,24 +69,28 @@ pub fn move_enemies(mut commands: Commands, mut enemies: Query<(Entity, &Enemy, 
                 translation.x -= enemy.speed * TIME_STEP;
                 if translation.x < (-WINDOW_WIDTH / 2.) - 16. {
                     commands.entity(enemy_entity).despawn_recursive();
+                    event_writer.send(EnemyKilledEvent(enemy_entity));
                 }
             }
             MoveDirection::Right => {
                 translation.x += enemy.speed * TIME_STEP;
                 if translation.x > (WINDOW_WIDTH / 2.) - 16. {
                     commands.entity(enemy_entity).despawn_recursive();
+                    event_writer.send(EnemyKilledEvent(enemy_entity));
                 }
             }
             MoveDirection::Up => {
                 translation.y += enemy.speed * TIME_STEP;
                 if translation.y > (WINDOW_HEIGHT / 2.) - 16. {
                     commands.entity(enemy_entity).despawn_recursive();
+                    event_writer.send(EnemyKilledEvent(enemy_entity));
                 }
             }
             MoveDirection::Down => {
                 translation.y -= enemy.speed * TIME_STEP;
                 if translation.y < (-WINDOW_HEIGHT / 2.) - 16. {
                     commands.entity(enemy_entity).despawn_recursive();
+                    event_writer.send(EnemyKilledEvent(enemy_entity));
                 }
             }
             MoveDirection::None => {
