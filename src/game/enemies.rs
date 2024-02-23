@@ -8,6 +8,7 @@ impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, spawn_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, move_enemies.run_if(in_state(AppState::InGame)))
+            .add_systems(Update, rotate_enemies.run_if(in_state(AppState::InGame)))
             .add_systems(Update, check_collisions.run_if(in_state(AppState::InGame)))
             .add_systems(OnExit(AppState::InGame), teardown);
     }
@@ -57,15 +58,17 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
     }
 }
 
+pub fn rotate_enemies(mut enemies: Query<(Entity, &Enemy, &mut Transform)>) {
+    for (_enemy_entity, _enemy, mut transform) in enemies.iter_mut() {
+        transform.rotate_z(0.01);
+    }
+}
+
 pub fn move_enemies(
     mut commands: Commands,
     mut enemies: Query<(Entity, &Enemy, &mut Transform)>,
     mut event_writer: EventWriter<EnemyKilledEvent>,
 ) {
-    for (enemy_entity, enemy, mut transform) in enemies.iter_mut() {
-        transform.rotate_z(0.01);
-    }
-
     for (enemy_entity, enemy, mut transform) in enemies.iter_mut() {
         let translation = &mut transform.translation;
         match &enemy.direction {

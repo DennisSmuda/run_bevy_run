@@ -25,6 +25,12 @@ pub enum Collider {
     Enemy,
 }
 
+#[derive(Component)]
+struct Rotatable {
+    speed: f32,
+    direction: u8,
+}
+
 // MoveDirection Component
 #[derive(PartialEq, Copy, Clone, Debug)]
 pub enum MoveDirection {
