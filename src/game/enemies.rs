@@ -63,6 +63,10 @@ pub fn move_enemies(
     mut event_writer: EventWriter<EnemyKilledEvent>,
 ) {
     for (enemy_entity, enemy, mut transform) in enemies.iter_mut() {
+        transform.rotate_z(0.01);
+    }
+
+    for (enemy_entity, enemy, mut transform) in enemies.iter_mut() {
         let translation = &mut transform.translation;
         match &enemy.direction {
             &MoveDirection::Left => {
