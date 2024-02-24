@@ -6,4 +6,4 @@ Running on Bevy v.013
 
 This is an attempt to learn rust/bevy and recreate his experience.
 
-![screenshot](assets/screen.png)
+![screenshot](assets/screenshot.png)

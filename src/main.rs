@@ -33,7 +33,11 @@ pub enum AppState {
 #[derive(Resource)]
 pub struct GameState {
     pub score: u64,
+    pub enemies_killed: u64,
 }
+
+#[derive(Event)]
+struct EnemyKilledEvent(Entity);
 
 fn main() {
     App::new()
@@ -41,7 +45,10 @@ fn main() {
         .insert_resource(ClearColor(BG_COLOR))
         .insert_resource(SpawnTimer(Timer::from_seconds(0.5, TimerMode::Repeating)))
         .insert_resource(ScoreTimer(Timer::from_seconds(1.0, TimerMode::Repeating)))
-        .insert_resource(GameState { score: 0 })
+        .insert_resource(GameState {
+            score: 0,
+            enemies_killed: 0,
+        })
         // State
         .init_state::<AppState>()
         // Plugins
@@ -56,6 +63,7 @@ fn main() {
         .add_plugins(GameOverPlugin)
         .add_plugins(GamePlugin)
         .add_systems(Startup, setup_camera)
+        .add_event::<EnemyKilledEvent>()
         .run();
 }
 
