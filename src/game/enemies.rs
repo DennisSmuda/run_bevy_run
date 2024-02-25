@@ -18,10 +18,10 @@ fn spawn_enemies(
     mut commands: Commands,
     time: Res<Time>,
     mut timer: ResMut<SpawnTimer>,
-    mut players: Query<(&Player, &mut Transform)>,
+    mut players: Query<(&Player, &Transform)>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        let (player, mut transform) = players.single_mut();
+        let (_player, transform) = players.single_mut();
         let mut rng = rand::thread_rng();
 
         let direction: MoveDirection = rand::random();
