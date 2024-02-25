@@ -14,8 +14,14 @@ impl Plugin for EnemyPlugin {
     }
 }
 
-fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<SpawnTimer>) {
+fn spawn_enemies(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut timer: ResMut<SpawnTimer>,
+    mut players: Query<(&Player, &mut Transform)>,
+) {
     if timer.0.tick(time.delta()).just_finished() {
+        let (player, mut transform) = players.single_mut();
         let mut rng = rand::thread_rng();
 
         let direction: MoveDirection = rand::random();
@@ -31,18 +37,18 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
         // Spawn on opposite window-side to direction
         if direction == MoveDirection::Left {
             x = WINDOW_WIDTH / 2.;
-            y = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_HEIGHT / 2.;
+            y = transform.translation.y - spawn_padding;
         } else if direction == MoveDirection::Right {
             x = -WINDOW_WIDTH / 2.;
-            y = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_HEIGHT / 2.;
+            y = transform.translation.y - spawn_padding;
         }
 
         if direction == MoveDirection::Up {
             y = -WINDOW_HEIGHT / 2.;
-            x = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_WIDTH / 2.;
+            x = transform.translation.x - spawn_padding;
         } else if direction == MoveDirection::Down {
             y = WINDOW_HEIGHT / 2.;
-            x = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_WIDTH / 2.;
+            x = transform.translation.x - spawn_padding;
         }
 
         let spawn_position = Vec3::new(x, y, 0.);
