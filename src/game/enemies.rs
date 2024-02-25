@@ -20,6 +20,10 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
 
         let direction: MoveDirection = rand::random();
         let speed: f32 = rng.gen_range(32.0..264.0);
+
+        let rotation_speed: f32 = rng.gen_range(0.2..0.3);
+        let rotation_direction = rng.gen_range(-2..2);
+
         let mut x: f32 = rng.gen();
         let mut y: f32 = rng.gen();
         let spawn_padding: f32 = 0.8;
@@ -54,13 +58,17 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
                 ..default()
             })
             .insert(Enemy { speed, direction })
+            .insert(Rotatable {
+                speed: rotation_speed,
+                direction: rotation_direction,
+            })
             .insert(Collider::Enemy);
     }
 }
 
-pub fn rotate_enemies(mut enemies: Query<(Entity, &Enemy, &mut Transform)>) {
-    for (_enemy_entity, _enemy, mut transform) in enemies.iter_mut() {
-        transform.rotate_z(0.01);
+pub fn rotate_enemies(mut enemies: Query<(Entity, &Enemy, &mut Transform, &Rotatable)>) {
+    for (_enemy_entity, _enemy, mut transform, rotatable) in enemies.iter_mut() {
+        transform.rotate_z(rotatable.speed * TIME_STEP * rotatable.direction as f32);
     }
 }
 
