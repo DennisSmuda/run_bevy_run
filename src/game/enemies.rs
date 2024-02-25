@@ -14,12 +14,22 @@ impl Plugin for EnemyPlugin {
     }
 }
 
-fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<SpawnTimer>) {
+fn spawn_enemies(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut timer: ResMut<SpawnTimer>,
+    mut players: Query<(&Player, &Transform)>,
+) {
     if timer.0.tick(time.delta()).just_finished() {
+        let (_player, transform) = players.single_mut();
         let mut rng = rand::thread_rng();
 
         let direction: MoveDirection = rand::random();
         let speed: f32 = rng.gen_range(32.0..264.0);
+
+        let rotation_speed: f32 = rng.gen_range(0.2..0.3);
+        let rotation_direction = rng.gen_range(-2..2);
+
         let mut x: f32 = rng.gen();
         let mut y: f32 = rng.gen();
         let spawn_padding: f32 = 0.8;
@@ -27,18 +37,18 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
         // Spawn on opposite window-side to direction
         if direction == MoveDirection::Left {
             x = WINDOW_WIDTH / 2.;
-            y = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_HEIGHT / 2.;
+            y = transform.translation.y - spawn_padding;
         } else if direction == MoveDirection::Right {
             x = -WINDOW_WIDTH / 2.;
-            y = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_HEIGHT / 2.;
+            y = transform.translation.y - spawn_padding;
         }
 
         if direction == MoveDirection::Up {
             y = -WINDOW_HEIGHT / 2.;
-            x = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_WIDTH / 2.;
+            x = transform.translation.x - spawn_padding;
         } else if direction == MoveDirection::Down {
             y = WINDOW_HEIGHT / 2.;
-            x = rng.gen_range(-spawn_padding..spawn_padding) * WINDOW_WIDTH / 2.;
+            x = transform.translation.x - spawn_padding;
         }
 
         let spawn_position = Vec3::new(x, y, 0.);
@@ -54,13 +64,17 @@ fn spawn_enemies(mut commands: Commands, time: Res<Time>, mut timer: ResMut<Spaw
                 ..default()
             })
             .insert(Enemy { speed, direction })
+            .insert(Rotatable {
+                speed: rotation_speed,
+                direction: rotation_direction,
+            })
             .insert(Collider::Enemy);
     }
 }
 
-pub fn rotate_enemies(mut enemies: Query<(Entity, &Enemy, &mut Transform)>) {
-    for (_enemy_entity, _enemy, mut transform) in enemies.iter_mut() {
-        transform.rotate_z(0.01);
+pub fn rotate_enemies(mut enemies: Query<(Entity, &Enemy, &mut Transform, &Rotatable)>) {
+    for (_enemy_entity, _enemy, mut transform, rotatable) in enemies.iter_mut() {
+        transform.rotate_z(rotatable.speed * TIME_STEP * rotatable.direction as f32);
     }
 }
 
