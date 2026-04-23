@@ -30,8 +30,8 @@ fn spawn_enemies(
         let rotation_speed: f32 = rng.gen_range(0.2..0.3);
         let rotation_direction = rng.gen_range(-2..2);
 
-        let mut x: f32 = rng.gen();
-        let mut y: f32 = rng.gen();
+        let mut x: f32 = rng.gen_range(-WINDOW_WIDTH / 2.0..WINDOW_WIDTH / 2.0);
+        let mut y: f32 = rng.gen_range(-WINDOW_HEIGHT / 2.0..WINDOW_HEIGHT / 2.0);
         let spawn_padding: f32 = 0.8;
 
         // Spawn on opposite window-side to direction
